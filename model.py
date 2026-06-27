@@ -11,16 +11,19 @@ def sigmoid(z):
 X = [] # Features: [Bias, Tenure, MonthlyCharges]
 Y = [] # Target: Churn (0 or 1)
 
-with open('churn_data.csv', mode='r') as file:
+with open('d:/dev antoine/MLproject/churn_data.csv', mode='r', encoding='utf-8') as file:
     reader = csv.reader(file)
     next(reader) # Skip header row
     for row in reader:
         # Features normalized manually so the math stays stable
-        tenure_normalized = float(row[2]) / 50.0
-        charges_normalized = float(row[3]) / 100.0
+        tenure_normalized = float(row[5]) / 72.0   # Index 5 is tenure (divided by max months approx 72)
+        charges_normalized = float(row[18]) / 100.0 # Index 18 is MonthlyCharges
+
+        # Convert 'Yes' to 1.0 and 'No' to 0.0 using the correct Index 20 (Churn)
+        label = 1.0 if row[20] == 'Yes' else 0.0
         
         X.append([1.0, tenure_normalized, charges_normalized]) # 1.0 is the bias
-        Y.append(float(row[4]))
+        Y.append(label) # Append the numeric label we calculated above
 
 # 3. INITIALIZE WEIGHTS (Start at 0)
 weights = [0.0, 0.0, 0.0]
